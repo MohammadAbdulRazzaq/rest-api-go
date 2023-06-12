@@ -8,4 +8,5 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/spf13/viper v1.16.0
 )

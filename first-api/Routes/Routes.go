@@ -2,6 +2,7 @@ package Routes
 
 import (
 	"first-api/Controllers"
+	"first-api/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,13 +11,19 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	grp1 := r.Group("/mobile-api")
+	grp1 := r.Group("/api")
 	{
-		grp1.GET("mobile", Controllers.GetMobiles)
-		grp1.POST("mobile", Controllers.CreateMobile)
-		grp1.GET("mobile/:id", Controllers.GetMobileByID)
-		grp1.PUT("mobile/:id", Controllers.UpdateMobile)
-		grp1.DELETE("mobile/:id", Controllers.DeleteMobile)
+		grp1.POST("/signin", Controllers.SignIn)
 	}
+	protected := r.Group("/admin")
+	{
+		protected.Use(middleware.JwtAuthMiddleware())
+		protected.GET("mobile", Controllers.GetMobiles)
+		protected.POST("mobile", Controllers.CreateMobile)
+		protected.GET("mobile/:id", Controllers.GetMobileByID)
+		protected.PUT("mobile/:id", Controllers.UpdateMobile)
+		protected.DELETE("mobile/:id", Controllers.DeleteMobile)
+	}
+
 	return r
 }

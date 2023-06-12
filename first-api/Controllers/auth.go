@@ -1,44 +1,43 @@
 package Controllers
 
 import (
+	"first-api/Models"
+	"first-api/utils"
 	"net/http"
 
-	"time"
-
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
-// generateToken generates a JWT token
-func generateToken() string {
-	// Define the expiration time for the token
-	expirationTime := time.Now().Add(24 * time.Hour) // Token expires in 24 hours
-
-	// Create the JWT claims, which include the expiration time
-	claims := &jwt.StandardClaims{
-		ExpiresAt: expirationTime.Unix(),
-	}
-
-	// Generate the token using the claims and your JWT secret key
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString([]byte("AbdulrazzaQ"))
-	if err != nil {
-		// Handle the error if token generation fails
-		// For example, you can return an empty string or an error message
-		return ""
-	}
-
-	return signedToken
-}
-
-// SignIn ... User sign-in
 func SignIn(c *gin.Context) {
+	var loginData Models.LoginData
+	if err := c.ShouldBindJSON(&loginData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
 	// Perform user authentication logic here
-	// You can validate the user's credentials, generate a token, etc.
+	if !isValidCredentials(loginData.Username, loginData.Password) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
+	}
 
 	// Assuming authentication is successful, generate a JWT token
-	token := generateToken()
+	tokenString, err := utils.GenerateToken(loginData.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
 
-	// Return the token as the response
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	// Attach the token to the response header
+	c.Header("Authorization", "Bearer "+tokenString)
+
+	// Return a success response
+	c.JSON(http.StatusOK, gin.H{"message": "Sign-in successful"})
+}
+
+// Validate the user's credentials
+// Replace this with your own authentication logic
+func isValidCredentials(username, password string) bool {
+	// Example validation logic
+	return username == "ozone" && password == "Password"
 }
