@@ -1,7 +1,7 @@
 package Controllers
 
 import (
-	"first-api/Models"
+	"first-api/models"
 	"fmt"
 	"net/http"
 
@@ -18,10 +18,11 @@ import (
 // @Success 200 {object} Mobile
 // @Failure 404 {object} map[string]interface{}
 // @Router /mobile [post]
-func CreateMobile(c *gin.Context) {
-	var user Models.Mobile
+func (h *Handler) CreateMobile(c *gin.Context) {
+	var user models.Mobile
 	c.BindJSON(&user)
-	err := Models.CreateMobile(&user)
+	err := h.Service.CreateMobile(&user)
+
 	if err != nil {
 		fmt.Println(err.Error())
 		c.AbortWithStatus(http.StatusNotFound)

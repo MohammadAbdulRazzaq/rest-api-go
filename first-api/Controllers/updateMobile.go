@@ -1,7 +1,7 @@
 package Controllers
 
 import (
-	"first-api/Models"
+	"first-api/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,22 +14,22 @@ import (
 // @Accept json
 // @Produce json
 // @Param id path int true "Mobile device ID"
-// @Param mobile body Models.Mobile true "Mobile device object"
-// @Success 200 {object} Models.Mobile
+// @Param mobile body models.Mobile true "Mobile device object"
+// @Success 200 {object} models.Mobile
 // @Failure 404 {object} gin.H
 // @Router /mobile/{id} [put]
-func UpdateMobile(c *gin.Context) {
-	var user Models.Mobile
+func (h *Handler) UpdateMobile(c *gin.Context) {
+	var user models.Mobile
 	id := c.Params.ByName("id")
-	err := Models.GetMobileByID(&user, id)
+	mobile, err := h.Service.GetMobileByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, user)
 	}
-	c.BindJSON(&user)
-	err = Models.UpdateMobile(&user, id)
+	c.BindJSON(&mobile)
+	updatedmobile, err := h.Service.UpdateMobile(id)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.JSON(http.StatusOK, user)
+		c.JSON(http.StatusOK, updatedmobile)
 	}
 }

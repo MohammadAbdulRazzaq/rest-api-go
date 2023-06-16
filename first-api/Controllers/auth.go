@@ -1,7 +1,7 @@
 package Controllers
 
 import (
-	"first-api/Models"
+	"first-api/models"
 	"first-api/utils"
 	"net/http"
 
@@ -9,7 +9,7 @@ import (
 )
 
 func SignIn(c *gin.Context) {
-	var loginData Models.LoginData
+	var loginData models.LoginData
 	if err := c.ShouldBindJSON(&loginData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return

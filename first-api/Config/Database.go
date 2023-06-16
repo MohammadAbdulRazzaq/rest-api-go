@@ -1,10 +1,7 @@
-package Config
+package config
 
 import (
-	"fmt"
-
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
@@ -24,29 +21,30 @@ func BuildDBConfig() *DBConfig {
 		Port:     3306,
 		User:     "root",
 		Password: "password",
-		DBName:   "mydb",
+		DBName:   "MYDB",
 	}
 	return &dbConfig
 }
 
-func InitDB() {
-	dbConfig := BuildDBConfig()
-	dbURL := DbURL(dbConfig)
-	db, err := gorm.Open("mysql", dbURL)
-	if err != nil {
-		panic("Failed to connect to database: " + err.Error())
-	}
+// func InitDB() (*gorm.DB, error) {
+// 	dbConfig := BuildDBConfig()
+// 	dbURL := DbURL(dbConfig)
+// 	fmt.Println("Database URL:", dbURL) // Print the database URL for debugging
 
-	DB = db
-}
+// 	db, err := gorm.Open("mysql", dbURL)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to connect to database: %w", err)
+// 	}
+// 	return db, nil
+// }
 
-func DbURL(dbConfig *DBConfig) string {
-	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbConfig.User,
-		dbConfig.Password,
-		dbConfig.Host,
-		dbConfig.Port,
-		dbConfig.DBName,
-	)
-}
+// func DbURL(dbConfig *DBConfig) string {
+// 	return fmt.Sprintf(
+// 		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+// 		dbConfig.User,
+// 		dbConfig.Password,
+// 		dbConfig.Host,
+// 		dbConfig.Port,
+// 		dbConfig.DBName,
+// 	)
+// }

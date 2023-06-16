@@ -1,4 +1,4 @@
-package Models
+package models
 
 type Mobile struct {
 	ID     uint   `json:"id"`

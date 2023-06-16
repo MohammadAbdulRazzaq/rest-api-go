@@ -1,7 +1,6 @@
 package Controllers
 
 import (
-	"first-api/Models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,15 +12,15 @@ import (
 // @ID get-all-mobiles
 // @Accept json
 // @Produce json
-// @Success 200 {array} Models.Mobile
+// @Success 200 {array} models.Mobile
 // @Failure 404 {object} gin.H
 // @Router /mobiles [get]
-func GetMobiles(c *gin.Context) {
-	var user []Models.Mobile
-	err := Models.GetAllMobiles(&user)
+func (h *Handler) GetMobiles(c *gin.Context) {
+	mobile, err := h.Service.GetAllMobiles()
+	// mobile, err := models.GetAllMobiles()
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.JSON(http.StatusOK, user)
+		c.JSON(http.StatusOK, mobile)
 	}
 }

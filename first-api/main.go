@@ -1,15 +1,17 @@
 package main
 
 import (
-	"first-api/Config"
 	"first-api/Routes"
+	"first-api/docker/db"
 	"log"
 )
 
-func main() {
-	Config.InitDB() // Initialize the database connection
+func init() {
 
-	// Your code here
+	db.ReturnDB()
+}
+func main() {
+	//Config.InitDB() // Initialize the database connection
 
 	router := Routes.SetupRouter()
 

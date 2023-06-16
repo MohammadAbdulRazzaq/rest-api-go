@@ -11,18 +11,19 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	grp1 := r.Group("/api")
+	publicgrp := r.Group("/api")
 	{
-		grp1.POST("/signin", Controllers.SignIn)
+		publicgrp.POST("/signin", Controllers.SignIn)
 	}
 	protected := r.Group("/admin")
 	{
+		h := Controllers.New()
 		protected.Use(middleware.JwtAuthMiddleware())
-		protected.GET("mobile", Controllers.GetMobiles)
-		protected.POST("mobile", Controllers.CreateMobile)
-		protected.GET("mobile/:id", Controllers.GetMobileByID)
-		protected.PUT("mobile/:id", Controllers.UpdateMobile)
-		protected.DELETE("mobile/:id", Controllers.DeleteMobile)
+		protected.GET("mobile", h.GetMobiles)
+		protected.POST("mobile", h.CreateMobile)
+		protected.GET("mobile/:id", h.GetMobileByID)
+		protected.PUT("mobile/:id", h.UpdateMobile)
+		protected.DELETE("mobile/:id", h.DeleteMobile)
 	}
 
 	return r
